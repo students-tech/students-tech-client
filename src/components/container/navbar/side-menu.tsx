@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useUser, SignOutButton } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 interface SideMenuInterface {
     close: () => {}
@@ -11,14 +12,9 @@ const SideMenu: React.FC<SideMenuInterface> = ({ close }) => {
     const router = useRouter();
 
     return (
-        <div className="w-screen h-screen bg-[#F8F9FA] absolute top-0 px-5 py-5">
+        <div className="w-screen h-screen bg-[#F8F9FA] fixed top-0 px-5 py-5">
             <div className="flex justify-between">
                 <div>
-                    {isSignedIn &&
-                        <div className="mb-5 text-lg font-semibold">
-                            Hello, {user.firstName}!
-                        </div>
-                    }
                     <div className="mb-5">
                         Services
                     </div>
@@ -45,7 +41,16 @@ const SideMenu: React.FC<SideMenuInterface> = ({ close }) => {
                         )
                     }
                 </div>
-                <Button onClick={close}>Close</Button>
+                <Button
+                    className="bg-transparent hover:bg-transparent"
+                    onClick={close}>
+                    <Image
+                        src="/assets/cross.png"
+                        height={18}
+                        width={18}
+                        alt="close"
+                    />
+                </Button>
             </div>
         </div>
     )
