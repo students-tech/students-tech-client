@@ -44,15 +44,17 @@ const SideMenu: React.FC = () => {
 const NavButton: React.FC = () => {
   const { isSignedIn } = useUser();
   return (
-    <div className="flex flex-col justify-content items-center gap-4">
+    <div className="flex flex-col md:flex-row justify-content items-center gap-4">
       <Link href="/register/student/">
         <Button variant="link" className="bg-secondary text-xl">
           Register as Student
         </Button>
       </Link>
-      <Button variant="link" className="bg-secondary text-xl">
-        Register your Project
-      </Button>
+      <Link href="/projects/">
+        <Button variant="link" className="bg-secondary text-xl">
+          Register your Project
+        </Button>
+      </Link>
       {isSignedIn ? (
         <SignOutButton>
           <Button className="rounded-3xl text-white bg-[#0114d6]">
