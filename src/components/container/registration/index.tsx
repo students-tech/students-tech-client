@@ -8,9 +8,13 @@ import { toFormikValidationSchema } from "zod-formik-adapter";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
+import { UploadDropzone } from "@/lib/uploadthing";
+import { Label } from "@/components/ui/label";
 
 const RegistrationForm: React.FC = () => {
   const router = useRouter();
+  const { user } = useUser();
 
   const formik = useFormik({
     initialValues: {
@@ -28,14 +32,21 @@ const RegistrationForm: React.FC = () => {
       hoursAvailability: "",
       projectCount: "",
       relevantCoursework: "",
+      role: "",
+      ktmUrl: "",
+      resumeUrl: "",
     },
-    onSubmit: async (values) => {
-      // const res = await axios.post(
-      //   "https://students-tech-server-s7htybhruq-as.a.run.app/students/",
-      //   values
-      // );
-      toast.success("successfully registered as student");
-      router.push("/");
+    onSubmit: (values) => {
+      axios
+        .post(
+          "https://students-tech-server-s7htybhruq-as.a.run.app/students/",
+          { userID: user?.id, ...values }
+        )
+        .then(() => {
+          toast.success("successfully registered as student");
+          router.push("/");
+        })
+        .catch(() => toast.error("error when registering"));
     },
     validationSchema: toFormikValidationSchema(
       z.object({
@@ -50,15 +61,18 @@ const RegistrationForm: React.FC = () => {
         universityEmail: z.string().email(),
         major: z.string(),
         currentSemester: z.number(),
-        hoursAvailability: z.number(),
+        hoursAvailability: z.string(),
         projectCount: z.string(),
         relevantCoursework: z.string(),
+        role: z.string(),
+        ktmUrl: z.string(),
+        resumeUrl: z.string(),
       })
     ),
   });
 
   return (
-    <div className="w-full h-full p-4">
+    <div className="w-full h-full p-8 md:p-16">
       <form onSubmit={formik.handleSubmit}>
         <RegistrationLabel
           label="name"
@@ -162,7 +176,7 @@ const RegistrationForm: React.FC = () => {
         <RegistrationLabel
           title="How many hour you are available in a day for work?"
           label="hoursAvailability"
-          type="number"
+          type="text"
           placeholder="I am available for.."
           required={false}
           value={formik.values.hoursAvailability}
@@ -186,7 +200,48 @@ const RegistrationForm: React.FC = () => {
           value={formik.values.relevantCoursework}
           onChange={formik.handleChange}
         />
-        <Button type="submit"> submit </Button>
+        <RegistrationLabel
+          title="What's your main tech role"
+          label="role"
+          type="text"
+          placeholder="Backend Engineer"
+          required
+          value={formik.values.role}
+          onChange={formik.handleChange}
+        />
+        <div className="mb-4">
+          <Label htmlFor="ktmUpload" className="font-bold">
+            Upload KTM
+          </Label>
+          <UploadDropzone
+            endpoint="imageUploader"
+            onClientUploadComplete={(res) => {
+              if (res !== undefined) {
+                formik.values.ktmUrl = res[0].fileUrl;
+              }
+            }}
+            onUploadError={() => {
+              toast.error("failed to upload KTM");
+            }}
+          />
+        </div>
+        <div className="mb-4">
+          <Label htmlFor="ktmUpload" className="font-bold">
+            Upload Resume
+          </Label>
+          <UploadDropzone
+            endpoint="imageUploader"
+            onClientUploadComplete={(res) => {
+              formik.values.resumeUrl = res[0].fileUrl;
+            }}
+            onUploadError={() => {
+              toast.error("failed to upload KTM");
+            }}
+          />
+        </div>
+        <Button type="submit" className="w-full" onClick={formik.submitForm}>
+          submit
+        </Button>
       </form>
     </div>
   );

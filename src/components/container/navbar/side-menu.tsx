@@ -42,9 +42,9 @@ const SideMenu: React.FC = () => {
 };
 
 const NavButton: React.FC = () => {
-  const { isSignedIn, user } = useUser();
+  const { isSignedIn } = useUser();
   return (
-    <>
+    <div className="flex flex-col justify-content items-center gap-4">
       <Link href="/register/student/">
         <Button variant="link" className="bg-secondary text-xl">
           Register as Student
@@ -66,7 +66,7 @@ const NavButton: React.FC = () => {
           </Button>
         </Link>
       )}
-    </>
+    </div>
   );
 };
 
