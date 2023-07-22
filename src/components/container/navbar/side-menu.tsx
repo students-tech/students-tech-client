@@ -42,7 +42,7 @@ const SideMenu: React.FC = () => {
 };
 
 const NavButton: React.FC = () => {
-  const { isSignedIn } = useUser();
+  const { isSignedIn, user } = useUser();
   return (
     <>
       <Button variant="link" className="bg-secondary text-xl">
