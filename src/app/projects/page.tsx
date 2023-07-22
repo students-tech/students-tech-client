@@ -82,7 +82,7 @@ const Project = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [step, setStep] = useState(3);
+  const [step, setStep] = useState(1);
   const [prompt, setPrompt] = useState("");
   const [listPrompt, setListPrompt] = useState([]);
 
