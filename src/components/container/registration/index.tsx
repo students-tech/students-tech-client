@@ -232,7 +232,9 @@ const RegistrationForm: React.FC = () => {
           <UploadDropzone
             endpoint="imageUploader"
             onClientUploadComplete={(res) => {
-              formik.values.resumeUrl = res[0].fileUrl;
+              if (res !== undefined) {
+                formik.values.resumeUrl = res[0].fileUrl;
+              }
             }}
             onUploadError={() => {
               toast.error("failed to upload KTM");
