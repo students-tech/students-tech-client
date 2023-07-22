@@ -45,14 +45,13 @@ const NavButton: React.FC = () => {
   const { isSignedIn, user } = useUser();
   return (
     <>
+      <Link href="/register/student/">
+        <Button variant="link" className="bg-secondary text-xl">
+          Register as Student
+        </Button>
+      </Link>
       <Button variant="link" className="bg-secondary text-xl">
-        Services
-      </Button>
-      <Button variant="link" className="bg-secondary text-xl">
-        About
-      </Button>
-      <Button variant="link" className="bg-secondary text-xl">
-        Career
+        Register your Project
       </Button>
       {isSignedIn ? (
         <SignOutButton>
