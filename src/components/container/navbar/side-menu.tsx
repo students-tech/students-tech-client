@@ -1,59 +1,74 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
-import { useUser, SignOutButton } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
+import { SignOutButton, useUser } from "@clerk/nextjs";
 import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
 
-interface SideMenuInterface {
-    close: () => {}
-}
-
-const SideMenu: React.FC<SideMenuInterface> = ({ close }) => {
-    const { isSignedIn, user } = useUser();
-    const router = useRouter();
-
-    return (
-        <div className="w-screen h-screen bg-[#F8F9FA] fixed top-0 px-5 py-5">
-            <div className="flex justify-between">
-                <div>
-                    <div className="mb-5">
-                        Services
-                    </div>
-                    <div className="mb-5">
-                        About
-                    </div>
-                    <div className="mb-5">
-                        Career
-                    </div>
-                    {!isSignedIn ?
-                        (<Button
-                            className="bg-[#0114D6] hover:text-[#0114D6] hover:bg-[#F8F9FA]"
-                            onClick={() => router.push("/sign-in")}>
-                            Log In
-                        </Button>
-                        ) : (
-                            <SignOutButton>
-                                <Button
-                                    className="bg-[#FB0606] hover:text-[#FB0606] hover:bg-[#F8F9FA]"
-                                    onClick={() => router.push("/sign-in")}>
-                                    Log Out
-                                </Button>
-                            </SignOutButton>
-                        )
-                    }
-                </div>
-                <Button
-                    className="bg-transparent hover:bg-transparent"
-                    onClick={close}>
-                    <Image
-                        src="/assets/cross.png"
-                        height={18}
-                        width={18}
-                        alt="close"
-                    />
-                </Button>
-            </div>
+const SideMenu: React.FC = () => {
+  const [sliderState, setSliderState] = useState<boolean>(false);
+  return (
+    <div>
+      <div className="ml-auto flex h-full justify-between items-center gap-8 hidden md:block">
+        <NavButton />
+      </div>
+      <div
+        className="md:hidden cursor-pointer"
+        onClick={() => setSliderState(true)}
+      >
+        <Image
+          src="/assets/hamburger.png"
+          width={30}
+          height={30}
+          alt="hamburger icon"
+        />
+      </div>
+      {sliderState && (
+        <div className="w-screen h-screen absolute left-0 top-0 bg-secondary p-8 flex flex-col gap-4">
+          <Image
+            src="/assets/cross.png"
+            width={30}
+            height={30}
+            alt="cross"
+            className="ml-auto"
+            onClick={() => setSliderState(false)}
+          />
+          <NavButton />
         </div>
-    )
-}
+      )}
+    </div>
+  );
+};
+
+const NavButton: React.FC = () => {
+  const { isSignedIn } = useUser();
+  return (
+    <>
+      <Button variant="link" className="bg-secondary text-xl">
+        Services
+      </Button>
+      <Button variant="link" className="bg-secondary text-xl">
+        About
+      </Button>
+      <Button variant="link" className="bg-secondary text-xl">
+        Career
+      </Button>
+      {isSignedIn ? (
+        <SignOutButton>
+          <Button className="rounded-3xl text-white bg-[#0114d6]">
+            Log Out
+          </Button>
+        </SignOutButton>
+      ) : (
+        <Link href="/sign-in">
+          <Button className="rounded-3xl text-white bg-[#0114d6]">
+            Log In
+          </Button>
+        </Link>
+      )}
+    </>
+  );
+};
 
 export default SideMenu;
